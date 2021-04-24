@@ -25,14 +25,18 @@ entry mint(o : address) {
   }
 }
 
-entry allow (spender : address, tid: nat) {
+entry approve (spender : address, tid: nat) {
   called by ledger[tid].owner
   failif {
-    r1 with "UNSAFE ALLOWANCE" : allowance.contains((caller, spender));
+    r1 with "UNSAFE ALLOWANCE" : allowance.contains((source, spender));
   }
   effect {
-    allowance.addupdate((caller, spender), {})
+    allowance.addupdate((source, spender), {})
   }
+}
+
+getter getOwner(tid : nat) : address {
+  return (ledger[tid].owner)
 }
 
 specification entry %transfer(%from : address, %to : address, tid : nat) {
