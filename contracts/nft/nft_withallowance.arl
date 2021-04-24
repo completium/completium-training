@@ -2,7 +2,6 @@ archetype simpleNFT(admin : address)
 
 asset ledger {
   id    : nat;
-  price : tez;
   owner : address;
 }
 
@@ -12,23 +11,17 @@ asset allowance identified by  addr_owner addr_spender {
 }
 
 entry %transfer (%from : address, %to : address, tid : nat) {
-  require {
-    r0: transferred >= ledger[tid].price;
-  }
-  effect {
-    if caller <> %from then begin
-      dorequire (allowance.contains((%from, caller)), "CALLER NOT ALLOWED");
-      allowance.remove(((%from, caller)))
-    end;
-    ledger[tid].owner := %to;
-    transfer transferred to %from;
-  }
+  if caller <> %from then begin
+    dorequire (allowance.contains((%from, caller)), "CALLER NOT ALLOWED");
+    allowance.remove(((%from, caller)))
+  end;
+  ledger[tid].owner := %to;
 }
 
-entry mint(o : address, p : tez) {
+entry mint(o : address) {
   called by admin
   effect {
-    ledger.add({ id = ledger.count(); price = p; owner = o })
+    ledger.add({ id = ledger.count(); owner = o })
   }
 }
 
