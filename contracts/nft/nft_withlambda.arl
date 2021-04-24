@@ -13,7 +13,24 @@ record auction {
 
 variable auctions : map<nat, auction> = []
 
-variable exec_bid : option<lambda<auction, (list<operation> * option<auction>)>> = none
+variable exec_bid : option<lambda<auction, (list<operation> * option<auction>)>> = lambda(a ->
+  if now >= a.endofbid or transferred > a.bestbid then
+    fail("InvalidCondition");
+  match a.bestbidder with
+  | some b -> begin
+    var e   : contract<unit> = b;
+    var op  : operation = mkoperation(a.bestbid, e, ());
+    end
+  | none -> ()
+  end;
+  var %end = a.endofbid;
+  var newa = {
+    bestbidder = some(caller);
+    bestbid = transferred;
+    endofbid = (if %end- now < 2m then %end + 2m else %end)
+  };
+  return (([], some(newa)));
+)
 
 entry %transfer (%from : address, %to : address, tid : nat) {
   called by ledger[tid].owner
