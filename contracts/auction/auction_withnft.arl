@@ -1,6 +1,4 @@
-archetype auction(tokenid : nat, nft: address)
-
-variable owner : option<address> = none
+archetype auction(owner : address, tokenid : nat, nft: address)
 
 variable bestbidder : option<address> = none
 variable bestbid    : tez = 0tz
@@ -18,10 +16,10 @@ entry checkowner(token_owner : address) {
   require {
     r1 otherwise "CALLER NOT OWNER": source = token_owner
   }
-  effect { owner := some(token_owner) }
 }
 
 transition upforsale (price : tez) {
+  called by owner
   from Transferred to ForSale
   with effect {
     bestbid := price;
@@ -59,7 +57,7 @@ transition claim () {
     match bestbidder with
     | some best ->
       transfer balance to best;
-      transfer 0tz to nft call %transfer<address * address * nat>((opt_get(owner), best, tokenid))
+      transfer 0tz to nft call %transfer<address * address * nat>((owner, best, tokenid))
     | none -> ()
     end;
     forsale := false;
