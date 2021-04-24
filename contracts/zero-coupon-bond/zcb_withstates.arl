@@ -1,0 +1,52 @@
+archetype simpleZCB(
+  holder        : address,
+  issuer        : address,
+  originalvalue : tez,
+  facerate      : rational,
+  maturity      : duration,
+  payback       : duration
+)
+
+variable subscribed   : bool = false
+variable redemption   : date = now
+
+states =
+| Created initial
+| Subscribed
+| Redeemed
+| Defaulted
+
+transition subscribe() {
+  called by holder
+  require {
+    r1: transferred >= originalvalue;
+  }
+  from Created to Subscribed
+  with effect {
+    redemption := now + maturity;
+    transfer originalvalue to issuer;
+    transfer (transferred - originalvalue) to caller
+  }
+}
+
+transition redeem() {
+  called by issuer
+  require {
+    r2: transferred >= facerate * originalvalue;
+    r3: now >= redemption;
+  }
+  from Subscribed to Redeemed
+  with effect {
+    var facevalue = facerate * originalvalue;
+    transfer facevalue to holder;
+    transfer (transferred - facevalue) to caller
+  }
+}
+
+transition default() {
+  called by holder
+  require {
+    r4: now > redemption + payback;
+  }
+  from Subscribed to Defaulted
+}

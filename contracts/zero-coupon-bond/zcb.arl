@@ -1,0 +1,42 @@
+archetype simpleZCB(
+  holder        : address,
+  issuer        : address,
+)
+
+variable subscribed   : bool = false
+variable redemption   : date = now
+
+variable originalvalue : tez = 1000tz
+variable facerate : rational = 10%
+
+entry subscribe() {
+  called by holder
+  require {
+    r1: subscribed = false;
+    r2: transferred >= originalvalue;
+  }
+  effect {
+    redemption := now + 365d;
+    subscribed   := true;
+    transfer originalvalue to issuer;
+    transfer (transferred - originalvalue) to caller
+  }
+}
+
+entry redeem() {
+  called by issuer
+  require {
+    r3: subscribed = true;
+    r4: transferred >= facerate * originalvalue;
+    r5: now >= redemption;
+  }
+  effect {
+    var facevalue = facerate * originalvalue;
+    transfer facevalue to holder;
+    transfer (transferred - facevalue) to caller
+  }
+}
+
+specification {
+  s1: balance = 0tz
+}

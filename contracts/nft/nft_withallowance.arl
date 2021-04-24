@@ -1,0 +1,49 @@
+archetype simpleNFT(admin : address)
+
+asset ledger {
+  id    : nat;
+  price : tez;
+  owner : address;
+}
+
+asset allowance identified by  addr_owner addr_spender {
+  addr_owner       : address;
+  addr_spender     : address;
+}
+
+entry %transfer (%from : address, %to : address, tid : nat) {
+  require {
+    r0: transferred >= ledger[tid].price;
+  }
+  effect {
+    if caller <> %from then begin
+      dorequire (allowance.contains((%from, caller)), "CALLER NOT ALLOWED");
+      allowance.remove(((%from, caller)))
+    end;
+    ledger[tid].owner := %to;
+    transfer transferred to %from;
+  }
+}
+
+entry mint(o : address, p : tez) {
+  called by admin
+  effect {
+    ledger.add({ id = ledger.count(); price = p; owner = o })
+  }
+}
+
+entry allow (spender : address, tid: nat) {
+  called by ledger[tid].owner
+  failif {
+    r1 with "UNSAFE ALLOWANCE" : allowance.contains((caller, spender));
+  }
+  effect {
+    allowance.addupdate((caller, spender), {})
+  }
+}
+
+specification entry %transfer(%from : address, %to : address, tid : nat) {
+ postcondition p {
+   caller <> %from -> not allowance.contains((%from, caller))
+ }
+}

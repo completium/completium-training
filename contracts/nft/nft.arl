@@ -1,0 +1,47 @@
+archetype nft(admin : address)
+
+asset ledger {
+  id    : nat;
+  price : tez;
+  owner : address;
+}
+
+entry %transfer (%from : address, %to : address, tid : nat) {
+  require {
+    r0: transferred >= ledger[tid].price;
+  }
+  effect {
+    ledger[tid].owner := %to;
+    transfer transferred to %from;
+  }
+}
+
+entry mint(o : address, p : tez) {
+  called by admin
+  effect {
+    ledger.add({ id = ledger.count(); price = p; owner = o })
+  }
+}
+
+specification entry %transfer(%from : address, %to : address, tid : nat) {
+  /* postcondition p1 {
+    balance = 0tz
+  } */
+  postcondition p2 {
+    %from = %to -> ledger = before.ledger
+  }
+  postcondition p3 {
+    %from <> %to ->
+      let some token = ledger[tid] in
+      token.owner = %to
+      otherwise false
+  }
+  postcondition p4 {
+    forall token in ledger,
+      token.owner <> %from ->
+      token.owner <> %to ->
+      let some btoken = before.ledger[token.id] in
+        btoken = token
+      otherwise false
+  }
+}
