@@ -2,37 +2,35 @@ archetype nft(admin : address)
 
 asset ledger {
   id         : nat;
-  price      : tez;
   owner      : address;
-  /* auction data */
-  forsale    : bool = false;
+}
+
+record auction {
   bestbid    : tez = 0tz;
   bestbidder : option<address> = none;
   endofbid   : date = now;
 }
 
+variable auctions : map<nat, auction> = []
+
 entry %transfer (%from : address, %to : address, tid : nat) {
-  require {
-    r0: transferred >= ledger[tid].price;
-  }
+  called by ledger[tid].owner
   effect {
     ledger[tid].owner := %to;
-    transfer transferred to %from;
   }
 }
 
 entry mint(o : address, p : tez) {
   called by admin
   effect {
-    ledger.add({ id = ledger.count(); price = p; owner = o })
+    ledger.add({ id = ledger.count(); owner = o })
   }
 }
 
 entry upforsale (tid : nat, initprice : tez) {
   called by ledger[tid].owner
   effect {
-    ledger.update(tid, {
-      forsale  = true;
+    auctions := put(auctions, tid,{
       bestbid  = initprice;
       endofbid = (now + 5m)
     });
@@ -41,34 +39,36 @@ entry upforsale (tid : nat, initprice : tez) {
 
 entry bid(tid : nat) {
   require {
-    r1 otherwise "Asset Not For Sale": ledger[tid].forsale = true;
-    r2: now < ledger[tid].endofbid;
-    r3: transferred > ledger[tid].bestbid;
+    r1 otherwise "Asset Not For Sale": contains(auctions, tid);
+    r2: now < auctions[tid].endofbid;
+    r3: transferred > auctions[tid].bestbid;
   }
   effect {
-    match ledger[tid].bestbidder with
+    match auctions[tid].bestbidder with
     | some b ->
-      transfer ledger[tid].bestbid to b
+      transfer auctions[tid].bestbid to b
     | none -> ()
     end;
-    ledger.update(tid, {
+    var %end = auctions[tid].endofbid;
+    auctions := put(auctions, tid, {
       bestbidder = some(caller);
       bestbid = transferred;
-      endofbid += (if ledger[tid].endofbid - now < 2m then 2m else 0)
+      endofbid = (if %end - now < 2m then %end + 2m else %end)
     })
   }
 }
 
 entry claim (tid : nat) {
   require {
-    r4 otherwise "Bid Period Is Still On": now > ledger[tid].endofbid;
-    r5: ledger[tid].forsale = true;
+    r4 otherwise "Bid Period Is Still On": now > auctions[tid].endofbid;
+    r5: contains(auctions, tid);
   }
   effect {
-    match ledger[tid].bestbidder with
-    | some b ->
-      transfer ledger[tid].bestbid to ledger[tid].owner;
-      ledger.update(tid, { owner = b; forsale = false })
+    match auctions[tid].bestbidder with
+    | some b -> begin
+      transfer auctions[tid].bestbid to ledger[tid].owner;
+      auctions := update(auctions, tid, none<auction>);
+      end
     | none -> ()
     end
   }
