@@ -1,0 +1,47 @@
+archetype auction(owner : address, assetid : bytes)
+
+variable bestbidder : address = owner
+variable bestbid    : tez = 0tz
+
+variable endofbid   : date = now
+
+variable forsale : bool = false
+
+entry upforsale (price : tez) {
+  called by owner
+  effect {
+    forsale := true;
+    bestbid := price;
+    endofbid := now + 5m;
+  }
+}
+
+entry bid() {
+  require {
+    r1 otherwise "Asset Not For Sale": forsale = true;
+    r2: now < endofbid;
+    r3: caller <> bestbidder;
+    r4: transferred > bestbid;
+  }
+  effect {
+    if balance <> transferred then
+      transfer bestbid to bestbidder;
+    bestbidder := caller;
+    bestbid := transferred;
+    if endofbid - now < 2m then
+     endofbid += 2m;
+  }
+}
+
+entry claim () {
+  require {
+    r5 otherwise "Bid Period Is Still On": now > endofbid;
+    r6: forsale = true;
+  }
+  effect {
+    if balance > 0tz then
+        transfer balance to owner;
+    owner := bestbidder;
+    forsale := false;
+  }
+}
