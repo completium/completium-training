@@ -13,6 +13,8 @@ record auction {
 
 variable auctions : map<nat, auction> = []
 
+variable exec_bid : lambda<auction, (list<operation> * option<auction>)> = lambda(a -> ([],some(a)))
+
 entry %transfer (%from : address, %to : address, tid : nat) {
   called by ledger[tid].owner
   effect {
@@ -40,6 +42,20 @@ entry upforsale (tid : nat, initprice : tez) {
 entry bid(tid : nat) {
   require {
     r1 otherwise "Asset Not For Sale": contains(auctions, tid);
+  }
+  effect {
+    var res = exec_lambda(exec_bid, auctions[tid]);
+    var ops = res[0];
+    var val = res[1];
+    auctions := update(auctions, tid, val);
+    operations := concat(operations, ops);
+  }
+}
+
+/*
+entry bid(tid : nat) {
+  require {
+    r1 otherwise "Asset Not For Sale": contains(auctions, tid);
     r2: now < auctions[tid].endofbid;
     r3: transferred > auctions[tid].bestbid;
   }
@@ -57,6 +73,7 @@ entry bid(tid : nat) {
     })
   }
 }
+*/
 
 entry claim (tid : nat) {
   require {
@@ -65,10 +82,9 @@ entry claim (tid : nat) {
   }
   effect {
     match auctions[tid].bestbidder with
-    | some b -> begin
+    | some b ->
       transfer auctions[tid].bestbid to ledger[tid].owner;
-      auctions := update(auctions, tid, none<auction>);
-      end
+      auctions := update(auctions, tid, none<auction>)
     | none -> ()
     end
   }
