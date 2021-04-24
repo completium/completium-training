@@ -57,6 +57,11 @@ entry bid(tid : nat) {
   }
 }
 
+entry set_exec_bid (l : option<lambda<auction, (list<operation> * option<auction>)>>) {
+  called by admin
+  effect { exec_bid := l }
+}
+
 entry claim (tid : nat) {
   require {
     r4 otherwise "Bid Period Is Still On": now > auctions[tid].endofbid;
