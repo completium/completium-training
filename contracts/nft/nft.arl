@@ -2,23 +2,19 @@ archetype nft(admin : address)
 
 asset ledger {
   id    : nat;
-  price : tez;
   owner : address;
 }
 
 entry %transfer (%from : address, %to : address, tid : nat) {
-  require {
-    r0: transferred >= ledger[tid].price;
-  }
+  called by ledger[tid].owner
   effect {
     ledger[tid].owner := %to;
-    transfer transferred to %from;
   }
 }
 
 entry mint(o : address, p : tez) {
   called by admin
   effect {
-    ledger.add({ id = ledger.count(); price = p; owner = o })
+    ledger.add({ id = ledger.count(); owner = o })
   }
 }
