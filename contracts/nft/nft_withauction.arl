@@ -3,8 +3,10 @@ archetype nft(admin : address)
 asset ledger {
   id         : nat;
   owner      : address;
-  /* auction data */
-  forsale    : bool = false;
+}
+
+asset auction {
+  aid        : nat;
   bestbid    : tez = 0tz;
   bestbidder : option<address> = none;
   endofbid   : date = now;
@@ -27,8 +29,8 @@ entry mint(o : address, p : tez) {
 entry upforsale (tid : nat, initprice : tez) {
   called by ledger[tid].owner
   effect {
-    ledger.update(tid, {
-      forsale  = true;
+    auction.add({
+      aid      = tid;
       bestbid  = initprice;
       endofbid = (now + 5m)
     });
@@ -37,34 +39,34 @@ entry upforsale (tid : nat, initprice : tez) {
 
 entry bid(tid : nat) {
   require {
-    r1 otherwise "Asset Not For Sale": ledger[tid].forsale = true;
-    r2: now < ledger[tid].endofbid;
-    r3: transferred > ledger[tid].bestbid;
+    r1 otherwise "Asset Not For Sale": auction.contains(tid);
+    r2: now < auction[tid].endofbid;
+    r3: transferred > auction[tid].bestbid;
   }
   effect {
-    match ledger[tid].bestbidder with
+    match auction[tid].bestbidder with
     | some b ->
-      transfer ledger[tid].bestbid to b
+      transfer auction[tid].bestbid to b
     | none -> ()
     end;
-    ledger.update(tid, {
+    auction.update(tid, {
       bestbidder = some(caller);
       bestbid = transferred;
-      endofbid += (if ledger[tid].endofbid - now < 2m then 2m else 0)
+      endofbid += (if auction[tid].endofbid - now < 2m then 2m else 0)
     })
   }
 }
 
 entry claim (tid : nat) {
   require {
-    r4 otherwise "Bid Period Is Still On": now > ledger[tid].endofbid;
-    r5: ledger[tid].forsale = true;
+    r4 otherwise "Bid Period Is Still On": now > auction[tid].endofbid;
+    r5: auction.contains(tid);
   }
   effect {
-    match ledger[tid].bestbidder with
+    match auction[tid].bestbidder with
     | some b ->
-      transfer ledger[tid].bestbid to ledger[tid].owner;
-      ledger.update(tid, { owner = b; forsale = false })
+      transfer auction[tid].bestbid to ledger[tid].owner;
+      auction.remove(tid)
     | none -> ()
     end
   }
