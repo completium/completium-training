@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE why3session PUBLIC "-//Why3//proof session v5//EN"
+"http://why3.lri.fr/why3session.dtd">
+<why3session shape_version="6">
+<prover id="0" name="Z3" version="4.8.4" timelimit="1" steplimit="0" memlimit="1000"/>
+<prover id="1" name="Alt-Ergo" version="2.4.0" timelimit="1" steplimit="0" memlimit="1000"/>
+<prover id="2" name="CVC4" version="1.6" timelimit="1" steplimit="0" memlimit="1000"/>
+<file format="whyml">
+<path name=".."/><path name="nft_withallowance.mlw"/>
+<theory name="SimpleNFT_storage">
+ <goal name="View_ledger.empty_subset">
+ </goal>
+ <goal name="Field_ledger.eqP">
+ </goal>
+ <goal name="Field_ledger.N.eqP">
+ </goal>
+ <goal name="Field_ledger.N.eqkP">
+ </goal>
+ <goal name="Field_ledger.N.F.eqP">
+ </goal>
+ <goal name="Field_ledger.N.F.normP">
+ </goal>
+ <goal name="Field_ledger.N.F.normK">
+ </goal>
+ <goal name="Field_ledger.N.F.normI">
+ </goal>
+ <goal name="Field_ledger.N.F.qmemP">
+ </goal>
+ <goal name="Ledger.eqkP">
+ </goal>
+ <goal name="Ledger.eqtP">
+ </goal>
+ <goal name="Ledger.N.eqP">
+ </goal>
+ <goal name="Ledger.N.eqkP">
+ </goal>
+ <goal name="Ledger.N.F.eqP">
+ </goal>
+ <goal name="Ledger.N.F.normP">
+ </goal>
+ <goal name="Ledger.N.F.normK">
+ </goal>
+ <goal name="Ledger.N.F.normI">
+ </goal>
+ <goal name="Ledger.N.F.qmemP">
+ </goal>
+ <goal name="Ledger.mem_get_key">
+ </goal>
+ <goal name="Ledger.get_from_cons_hd">
+ </goal>
+ <goal name="Ledger.get_from_cons_tl">
+ </goal>
+ <goal name="Ledger.get_from_nil">
+ </goal>
+ <goal name="Ledger.card_remove">
+ </goal>
+ <goal name="Ledger.remove_set">
+ </goal>
+ <goal name="Ledger.empty_to_view">
+ </goal>
+ <goal name="View_allowance.empty_subset">
+ </goal>
+ <goal name="Field_allowance.eqP">
+ </goal>
+ <goal name="Field_allowance.N.eqP">
+ </goal>
+ <goal name="Field_allowance.N.eqkP">
+ </goal>
+ <goal name="Field_allowance.N.F.eqP">
+ </goal>
+ <goal name="Field_allowance.N.F.normP">
+ </goal>
+ <goal name="Field_allowance.N.F.normK">
+ </goal>
+ <goal name="Field_allowance.N.F.normI">
+ </goal>
+ <goal name="Field_allowance.N.F.qmemP">
+ </goal>
+ <goal name="Allowance.eqkP">
+ </goal>
+ <goal name="Allowance.eqtP">
+ </goal>
+ <goal name="Allowance.N.eqP">
+ </goal>
+ <goal name="Allowance.N.eqkP">
+ </goal>
+ <goal name="Allowance.N.F.eqP">
+ </goal>
+ <goal name="Allowance.N.F.normP">
+ </goal>
+ <goal name="Allowance.N.F.normK">
+ </goal>
+ <goal name="Allowance.N.F.normI">
+ </goal>
+ <goal name="Allowance.N.F.qmemP">
+ </goal>
+ <goal name="Allowance.mem_get_key">
+ </goal>
+ <goal name="Allowance.get_from_cons_hd">
+ </goal>
+ <goal name="Allowance.get_from_cons_tl">
+ </goal>
+ <goal name="Allowance.get_from_nil">
+ </goal>
+ <goal name="Allowance.card_remove">
+ </goal>
+ <goal name="Allowance.remove_set">
+ </goal>
+ <goal name="Allowance.empty_to_view">
+ </goal>
+ <goal name="_storage&#39;vc" expl="VC for _storage">
+ </goal>
+ <goal name="_cp_storage&#39;vc" expl="VC for _cp_storage">
+ </goal>
+</theory>
+<theory name="SimpleNFT" proved="true">
+ <goal name="transfer&#39;vc" expl="VC for transfer" proved="true">
+ <proof prover="0"><result status="timeout" time="1.00"/></proof>
+ <proof prover="1"><result status="timeout" time="1.00"/></proof>
+ <proof prover="2"><result status="timeout" time="1.00"/></proof>
+ <transf name="split_all_full" proved="true" >
+  <goal name="transfer&#39;vc.0" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.87"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.1" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.91"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.2" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.90"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.3" expl="p2" proved="true">
+  <proof prover="2"><result status="valid" time="0.89"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.4" expl="p3" proved="true">
+  <proof prover="2"><result status="valid" time="0.90"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.5" expl="p4" proved="true">
+  <proof prover="2"><result status="valid" time="0.90"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.6" expl="p5" proved="true">
+  <proof prover="2"><result status="valid" time="0.88"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.7" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.86"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.8" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.87"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.9" expl="p2" proved="true">
+  <proof prover="0"><result status="valid" time="0.27"/></proof>
+  <proof prover="1"><result status="timeout" time="1.00"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.10" expl="p3" proved="true">
+  <proof prover="1"><result status="valid" time="0.40" steps="1840"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.11" expl="p4" proved="true">
+  <proof prover="1"><result status="valid" time="0.40" steps="1934"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.12" expl="p5" proved="true">
+  <proof prover="1"><result status="valid" time="0.17" steps="258"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.13" expl="precondition" proved="true">
+  <proof prover="1"><result status="valid" time="0.13" steps="141"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.14" expl="precondition" proved="true">
+  <proof prover="1"><result status="valid" time="0.16" steps="174"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.15" expl="p2" proved="true">
+  <proof prover="0"><result status="valid" time="0.20"/></proof>
+  <proof prover="1"><result status="timeout" time="1.00"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.16" expl="p3" proved="true">
+  <proof prover="1"><result status="valid" time="0.23" steps="1252"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.17" expl="p4" proved="true">
+  <proof prover="1"><result status="valid" time="0.24" steps="1358"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+  <goal name="transfer&#39;vc.18" expl="p5" proved="true">
+  <proof prover="0"><result status="timeout" time="1.00"/></proof>
+  <proof prover="1"><result status="timeout" time="1.00"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  <transf name="split_all_full" proved="true" >
+   <goal name="transfer&#39;vc.18.0" expl="p5" proved="true">
+   <proof prover="2"><result status="valid" time="0.50"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.1" expl="p5" proved="true">
+   <proof prover="0"><result status="timeout" time="1.00"/></proof>
+   <proof prover="1"><result status="timeout" time="1.00"/></proof>
+   <proof prover="2" timelimit="5" memlimit="2000"><result status="valid" time="1.44"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.2" expl="p5" proved="true">
+   <proof prover="0"><result status="timeout" time="1.00"/></proof>
+   <proof prover="1"><result status="timeout" time="1.00"/></proof>
+   <proof prover="2" timelimit="5" memlimit="2000"><result status="valid" time="1.22"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.3" expl="p5" proved="true">
+   <proof prover="0"><result status="timeout" time="1.00"/></proof>
+   <proof prover="1"><result status="timeout" time="1.00"/></proof>
+   <proof prover="2" timelimit="5" memlimit="2000"><result status="valid" time="1.24"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.4" expl="p5" proved="true">
+   <proof prover="2"><result status="valid" time="0.59"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.5" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.18" steps="260"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.6" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.19" steps="254"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.7" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.20" steps="260"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.8" expl="p5" proved="true">
+   <proof prover="2"><result status="valid" time="0.64"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.9" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.19" steps="260"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.10" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.18" steps="253"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.11" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.19" steps="260"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.12" expl="p5" proved="true">
+   <proof prover="2"><result status="valid" time="0.67"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.13" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.19" steps="260"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.14" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.20" steps="253"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+   <goal name="transfer&#39;vc.18.15" expl="p5" proved="true">
+   <proof prover="1"><result status="valid" time="0.14" steps="260"/></proof>
+   <proof prover="2"><result status="timeout" time="1.00"/></proof>
+   </goal>
+  </transf>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="mint&#39;vc" expl="VC for mint" proved="true">
+ <proof prover="0"><result status="timeout" time="1.00"/></proof>
+ <proof prover="1"><result status="timeout" time="1.00"/></proof>
+ <proof prover="2"><result status="timeout" time="1.00"/></proof>
+ <transf name="split_all_full" proved="true" >
+  <goal name="mint&#39;vc.0" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.90"/></proof>
+  </goal>
+  <goal name="mint&#39;vc.1" expl="precondition" proved="true">
+  <proof prover="1"><result status="valid" time="0.65" steps="5517"/></proof>
+  <proof prover="2"><result status="timeout" time="1.00"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="approve&#39;vc" expl="VC for approve" proved="true">
+ <proof prover="0"><result status="valid" time="0.25"/></proof>
+ <proof prover="1"><result status="timeout" time="1.00"/></proof>
+ <proof prover="2"><result status="timeout" time="1.00"/></proof>
+ </goal>
+</theory>
+</file>
+</why3session>
