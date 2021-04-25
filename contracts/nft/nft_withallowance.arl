@@ -11,11 +11,16 @@ asset allowance identified by  addr_owner addr_spender {
 }
 
 entry %transfer (%from : address, %to : address, tid : nat) {
-  if caller <> %from then begin
-    dorequire (allowance.contains((%from, caller)), "CALLER NOT ALLOWED");
-    allowance.remove(((%from, caller)))
-  end;
-  ledger[tid].owner := %to;
+  require {
+    r0: ledger[tid].owner = %from
+  }
+  effect {
+    if caller <> %from then begin
+      dorequire (allowance.contains((%from, caller)), "CALLER NOT ALLOWED");
+      allowance.remove(((%from, caller)))
+    end;
+    ledger[tid].owner := %to;
+  }
 }
 
 entry mint(o : address) {
